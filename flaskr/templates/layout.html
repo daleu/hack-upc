@@ -1,12 +1,28 @@
 <!doctype html>
 <title>HackUPC - Destiny generation from image</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <div class=page>
   <h1>HackUPC - Destiny generation from image</h1>
-  <form action="{{ url_for('submit_image') }}" enctype=multipart/form-data method=post onSubmit="if(document.getElementById('fileinput').value == '') return false;">
+  <form action="{{ url_for('submit_image') }}" enctype=multipart/form-data method=post onSubmit="if(document.getElementById('fileinput').value == '') return false;
+  if(document.getElementById('outbounddate').value > document.getElementById('inbounddate').value);">
     <dl>
+	  <dt>Origin:
+	  <dd><input type=text id=origin name=origin>
+	  <dt>Outbound date:
+	  <dt><input type=date id=outbounddate name=outbounddate>
+	  <dt>Inbound date:
+	  <dt><input type=date id=inbounddate name=inbounddate>
+	  <dt><input type=number min=0
       <dt>Image:
-      <dd><input type=file id=fileInput name=image accept="image/*">
+      <dd><input type=file id=fileinput name=image accept="image/*">
       <dd><input type=submit value=Submit>
     </dl>
   </form>
