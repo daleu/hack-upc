@@ -1,18 +1,14 @@
 <!doctype html>
-<title>Flaskr first Quim App</title>
+<title>HackUPC - Destiny generation from image</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <div class=page>
-  <h1>Flaskr first Quim App</h1>
-  <div class=metanav>
-  {% if not session.logged_in %}
-    <a href="{{ url_for('login') }}">log in</a>
-    <a href="{{ url_for('register') }}">register</a>
-  {% else %}
-    <a href="{{ url_for('logout') }}">log out</a>
-  {% endif %}
-  </div>
-  {% for message in get_flashed_messages() %}
-    <div class=flash>{{ message }}</div>
-  {% endfor %}
+  <h1>HackUPC - Destiny generation from image</h1>
+  <form action="{{ url_for('submit_image') }}" enctype=multipart/form-data method=post>
+    <dl>
+      <dt>Image:
+      <dd><input type=file name=image accept="image/*">
+      <dd><input type=submit value=Submit>
+    </dl>
+  </form>
   {% block body %}{% endblock %}
 </div>

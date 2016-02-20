@@ -1,13 +1,17 @@
 #all the imports
 import sqlite3
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+import os
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, send_from_directory
 from contextlib import closing
 from sqlalchemy import text
+from werkzeug import secure_filename
 
 #configuration
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
 SECRET_KEY = 'development key'
+UPLOAD_FOLDER = '/tmp/images'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 # application
 app = Flask(__name__)
@@ -34,9 +38,7 @@ def teardown_request(exception):
 
 @app.route('/')
 def show_entries():
-    cur = g.db.execute('select title, text from entries order by id desc')
-    entries = [dict(title=row[0], text=row[1]) for row in cur.fetchall()]
-    return render_template('show_entries.html', entries=entries)
+    return render_template('layout.html')
 
 @app.route('/add', methods=['POST'])
 def add_entry():
@@ -77,6 +79,23 @@ def login():
 	    return render_template('login.html', error=error)
     return render_template('login.html', error=error)
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/submit_image', methods=['POST'])
+def submit_image():
+    file = request.files['image']
+    if file and allowed_file(file.filename):
+	    filename = secure_filename(file.filename)
+	    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	    return render_template('list_items.html', word=filename)
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
 @app.route('/register', methods=['GET','POST'])
 def register():
     error = None
@@ -108,4 +127,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    	app.run()
+    app.run()
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
