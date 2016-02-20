@@ -8,8 +8,6 @@ from sqlalchemy import text
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
 SECRET_KEY = 'development key'
-USERNAME = 'admin'
-PASSWORD = 'default'
 
 # application
 app = Flask(__name__)
@@ -54,14 +52,23 @@ def add_entry():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
-        else:
-            session['logged_in'] = True
-            flash('You were logged in')
-            return redirect(url_for('show_entries'))
+	sql = g.db.execute('select username from users')
+	boolean = None
+	username = None
+	for row in sql:
+	    if request.form['username'] == row[0]:
+		 boolean = True
+	         username = row[0]
+	if boolean:
+            sql = g.db.execute('select pass from users where username="' + username + '"')
+            names = []
+	    password = None
+            for row in sql:
+	        password = row[0]
+	    if request.form['password'] == password:
+		session['logged_in'] = True
+		flash('You were logged in')
+		return redirect(url_for('show_entries'))
     return render_template('login.html', error=error)
 
 @app.route('/register', methods=['GET','POST'])
@@ -78,13 +85,15 @@ def register():
 	    for name in names:
 		if request.form['username'] == name:
 		     error = 'User already exists'
+		     flash('ERROR')
 		     boolean = True
 	    if boolean:
     	        error = 'User already exists'
 		return render_template('register.html', error= error)
 	    else:
-		g.db.execute('insert into users (username, password) values (?, ?)', [request.form['username'], request.form['password']])
-	        return redirect(url_for('show_entries'))
+		g.db.execute('insert into users (username, pass) values (?, ?)', [request.form['username'], request.form['password']])
+		print "user registered"
+	        return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
