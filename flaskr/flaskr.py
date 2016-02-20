@@ -1,6 +1,7 @@
 #all the imports
 import sqlite3
 import os
+import requests
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, send_from_directory
 from contextlib import closing
 from sqlalchemy import text
@@ -89,6 +90,9 @@ def submit_image():
     if file and allowed_file(file.filename):
 	    filename = secure_filename(file.filename)
 	    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	    url = 'https://www.wolframcloud.com/objects/467125b7-bed3-471e-9d74-c7c2087e4cde?url='
+	    req = requests.get(url + filename)
+	    print req.text
 	    return render_template('list_items.html', word=filename)
 
 @app.route('/uploads/<filename>')
