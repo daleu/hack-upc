@@ -69,6 +69,12 @@ def login():
 		session['logged_in'] = True
 		flash('You were logged in')
 		return redirect(url_for('show_entries'))
+	    else:
+		error = 'Invalid password'
+		return render_template('login.html', error=error)
+	else:
+	    error = 'Invalid user'
+	    return render_template('login.html', error=error)
     return render_template('login.html', error=error)
 
 @app.route('/register', methods=['GET','POST'])
@@ -84,8 +90,6 @@ def register():
 	    boolean = None
 	    for name in names:
 		if request.form['username'] == name:
-		     error = 'User already exists'
-		     flash('ERROR')
 		     boolean = True
 	    if boolean:
     	        error = 'User already exists'
