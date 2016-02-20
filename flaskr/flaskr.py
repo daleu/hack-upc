@@ -11,7 +11,7 @@ from werkzeug import secure_filename
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
 SECRET_KEY = 'development key'
-UPLOAD_FOLDER = '/tmp/images'
+UPLOAD_FOLDER = '/home/quim/html/flaskr/img'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 # application
@@ -90,10 +90,15 @@ def submit_image():
     if file and allowed_file(file.filename):
 	    filename = secure_filename(file.filename)
 	    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-	    url = 'https://www.wolframcloud.com/objects/467125b7-bed3-471e-9d74-c7c2087e4cde?url='
-	    req = requests.get(url + filename)
-	    print req.text
-	    return render_template('list_items.html', word=filename)
+	    url = 'https://www.wolframcloud.com/objects/0200604e-85e2-4f0a-9a58-8cfc6d34788d?url='
+	    path = 'http://46.101.213.69/uploads/' + filename
+	    req = requests.get(url + path)
+	    array = req.text.split('"')
+	    names = []
+	    for i in range(0,len(array)-1):
+			if (i%2 == 1):
+				names.append(array[i])
+	    return render_template('list_items.html', word=names)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
