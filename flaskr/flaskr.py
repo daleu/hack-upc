@@ -3,6 +3,8 @@ import sqlite3
 import os
 import requests
 import json
+import codecs
+from xml.etree.ElementTree import fromstring, ElementTree
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, send_from_directory
 from contextlib import closing
 from sqlalchemy import text
@@ -66,7 +68,7 @@ def login():
 		 boolean = True
 	         username = row[0]
 	if boolean:
-            sql = g.db.execute('select pass from users where username="' + username + '"')
+	        sql = g.db.execute('select pass from users where username="' + username + '"')
             names = []
 	    password = None
             for row in sql:
@@ -110,7 +112,7 @@ def submit_image():
 
 	    media_with_location=[]
 	    all_media_ids = []
-	    media_ids,next = api.tag_recent_media(tag_name='france', count=1000)
+	    media_ids,next = api.tag_recent_media(tag_name=names[0], count=1000)
 	    position_tuple = ()
 	    for media_id in media_ids:
 	    	all_media_ids.append(media_id.id)
@@ -161,7 +163,12 @@ def submit_image():
 	    lng = str(data['results'][0]['geometry']['location']['lng'])
 	    latlong = lat + ',' + lng
 	    s = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/ES/EUR/es-ES/' + latlong + '-latlong/' + location + '-latlong/anytime/anytime?apiKey=ah295399453156671936599511203356'
-	    return render_template('list_items.html', word=names, origin=request.form['origin'], destiny='somewhere')
+	    skyscanner_req = requests.get(s);
+	    
+	    xml = skyscanner_req.text
+	    json_data = json.loads(xml)
+	    	    
+	    return render_template('list_items.html', word=names, origin=latlong, destiny=location, price=json_data['Quotes'][0]['MinPrice'])
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

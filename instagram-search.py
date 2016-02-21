@@ -53,9 +53,9 @@ trobat = None
 for i in media_with_location:
 	for j in media_with_location2:
 		if (i==j and trobat==None):
-			print i
+			print i[1]
 			trobat = True
 
 if (trobat == None):
-	print media_with_location[0]
+	print media_with_location[0][1]
 

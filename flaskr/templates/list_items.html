@@ -5,5 +5,9 @@
     <div class=flash>{{ tag }}</div>
   {% endfor %}
   <h2>Flight info</h2>
+  <ul class=entries>
+    <li><h2>From {{ origin }} to {{ destiny }}</h2>
+    <li><h3>Price: {{ price }}</h3></li>
+  </ul>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
 {% endblock %}
