@@ -1,0 +1,31 @@
+from instagram.client import InstagramAPI
+import sys
+from time import sleep  
+
+
+access_token = "243316452.1677ed0.aaf45b2c124449a3a53fc51ae5e0a214"
+api = InstagramAPI(access_token=access_token,
+			client_ips="8ab1830bac414c72b81daa905f890a3e",
+			client_secret="b8608ed65a644382a82312113ac39af2")
+recent_media, url = api.tag_recent_media(tag_name="school", count=5)
+
+for media in recent_media:
+   print media.caption.text
+'''
+for media in recent_media:  
+    # Where the media is
+    id_ = media.id
+    # List of users that like the image
+    users = [user.username for user in media.likes]
+    # If you have already like the picture, do nothing
+    if "YOUR USERNAME" in users:
+        print("IN PHOTO")
+
+    # If you haven't liked the photo then do it
+    else:
+        print("LIKING PICTURE")
+        api.like_media(media_id=id_)
+
+    # Sleep to make instagram stop complaining
+    sleep(2)
+'''

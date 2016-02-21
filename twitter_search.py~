@@ -1,5 +1,4 @@
 from TwitterSearch import *
-
 try:
     predictions = ['golf course','parcel','land site']
     
