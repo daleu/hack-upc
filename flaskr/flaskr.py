@@ -94,10 +94,12 @@ def submit_image():
 	    path = 'http://46.101.213.69/uploads/' + filename
 	    req = requests.get(url + path)
 	    array = req.text.split('"')
+	    #names -> object with the generated tags
 	    names = []
 	    for i in range(0,len(array)-1):
 			if (i%2 == 1):
 				names.append(array[i])
+		
 	    return render_template('list_items.html', word=names)
 
 @app.route('/uploads/<filename>')
